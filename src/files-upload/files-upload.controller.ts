@@ -1,16 +1,12 @@
 import {
   Controller,
-  FileTypeValidator,
-  HttpStatus,
-  MaxFileSizeValidator,
-  ParseFilePipe,
   Post,
-  UnprocessableEntityException,
   UploadedFile,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { createParseFilePipe } from '../shared/files/files-validation-factory.js';
 
 type File = Express.Multer.File;
 
@@ -25,30 +21,7 @@ export class FilesUploadController {
     }),
   )
   uploadFile(
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [
-          // 1) validate file size
-          new MaxFileSizeValidator({
-            // maxSize: 200, // 200Bytes
-            maxSize: 2 * 1024 * 1024, // 2MB
-            message: (maxSize) =>
-              `File is too big. Max file size is ${maxSize} bytes`,
-          }),
-
-          // 2) validate file type (extension)
-          new FileTypeValidator({ fileType: /png|jpg|jpeg|mp4/ }),
-
-          // 3) custom validation
-        ],
-        errorHttpStatusCode: HttpStatus.UNSUPPORTED_MEDIA_TYPE,
-        exceptionFactory: (error: string) => {
-          console.log('error', error);
-          throw new UnprocessableEntityException(error);
-        },
-        fileIsRequired: true,
-      }),
-    )
+    @UploadedFile(createParseFilePipe(2 * 1024 * 1024, /png|jpg|jpeg/)) // 2MB
     file: File,
   ) {
     // await this.awsS3.uploadSingleFile(file)
@@ -62,30 +35,7 @@ export class FilesUploadController {
     }),
   )
   uploadFiles(
-    @UploadedFiles(
-      new ParseFilePipe({
-        validators: [
-          // 1) validate file size
-          new MaxFileSizeValidator({
-            // maxSize: 200, // 200Bytes
-            maxSize: 2 * 1024 * 1024, // 2MB
-            message: (maxSize) =>
-              `File is too big. Max file size is ${maxSize} bytes`,
-          }),
-
-          // 2) validate file type (extension)
-          new FileTypeValidator({ fileType: /png|jpg|jpeg|pdf/ }),
-
-          // 3) custom validation
-        ],
-        errorHttpStatusCode: HttpStatus.UNSUPPORTED_MEDIA_TYPE,
-        exceptionFactory: (error: string) => {
-          console.log('error', error);
-          throw new UnprocessableEntityException(error);
-        },
-        fileIsRequired: true,
-      }),
-    )
+    @UploadedFiles(createParseFilePipe(2 * 1024 * 1024, /png|jpg|jpeg/))
     files: File[],
   ) {
     // await this.awsS3.uploadMultipleFiles(files)
