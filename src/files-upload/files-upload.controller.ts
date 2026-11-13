@@ -19,7 +19,11 @@ export class FilesUploadController {
   // constructor() {}
 
   @Post('/single')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(
+    FileInterceptor('file', {
+      limits: { fileSize: 2 * 1024 * 1024 },
+    }),
+  )
   uploadFile(
     @UploadedFile(
       new ParseFilePipe({
@@ -33,7 +37,7 @@ export class FilesUploadController {
           }),
 
           // 2) validate file type (extension)
-          new FileTypeValidator({ fileType: /png|jpg/ }),
+          new FileTypeValidator({ fileType: /png|jpg|jpeg|mp4/ }),
 
           // 3) custom validation
         ],
@@ -52,7 +56,11 @@ export class FilesUploadController {
   }
 
   @Post('/multiple')
-  @UseInterceptors(FilesInterceptor('files', 3))
+  @UseInterceptors(
+    FilesInterceptor('files', 3, {
+      limits: { fileSize: 2 * 1024 * 1024 },
+    }),
+  )
   uploadFiles(
     @UploadedFiles(
       new ParseFilePipe({
