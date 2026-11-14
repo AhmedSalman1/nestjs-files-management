@@ -8,10 +8,11 @@ import {
 } from '@nestjs/common';
 import { FileType } from './types/file.types.js';
 import { createFileTypeRegex } from './utils/file.util.js';
+import { NonEmptyArray } from './utils/array.util.js';
 
 const createFileValidators = (
   maxSize: number,
-  fileTypes: FileType[],
+  fileTypes: NonEmptyArray<FileType>,
 ): FileValidator[] => {
   const fileTypeRegex = createFileTypeRegex(fileTypes);
 
@@ -32,7 +33,7 @@ const createFileValidators = (
 
 export const createParseFilePipe = (
   maxSize: number,
-  fileTypes: FileType[],
+  fileTypes: NonEmptyArray<FileType>,
 ): ParseFilePipe =>
   new ParseFilePipe({
     validators: createFileValidators(maxSize, fileTypes),
