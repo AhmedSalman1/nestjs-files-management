@@ -8,9 +8,12 @@ import {
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { createParseFilePipe } from '../shared/files/files-validation-factory.js';
 import { parseFileSize } from '../shared/files/utils/file.util.js';
+import {
+  MAX_SIZE,
+  MaxFileCount,
+} from '../shared/files/constants/file.constants.js';
 
 type File = Express.Multer.File;
-const MAX_SIZE = '2MB' as const;
 
 @Controller('files-upload')
 export class FilesUploadController {
@@ -32,7 +35,7 @@ export class FilesUploadController {
 
   @Post('/multiple')
   @UseInterceptors(
-    FilesInterceptor('files', 3, {
+    FilesInterceptor('files', MaxFileCount.PRODUCTS_IMAGES, {
       limits: { fileSize: parseFileSize(MAX_SIZE) },
     }),
   )
