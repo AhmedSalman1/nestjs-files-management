@@ -7,8 +7,10 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { createParseFilePipe } from '../shared/files/files-validation-factory.js';
+import { parseFileSize } from '../shared/files/utils/file.util.js';
 
 type File = Express.Multer.File;
+const MAX_SIZE = '2MB' as const;
 
 @Controller('files-upload')
 export class FilesUploadController {
@@ -17,11 +19,11 @@ export class FilesUploadController {
   @Post('/single')
   @UseInterceptors(
     FileInterceptor('file', {
-      limits: { fileSize: 2 * 1024 * 1024 },
+      limits: { fileSize: parseFileSize(MAX_SIZE) },
     }),
   )
   uploadFile(
-    @UploadedFile(createParseFilePipe(2 * 1024 * 1024, ['png', 'jpg', 'jpeg'])) // 2MB
+    @UploadedFile(createParseFilePipe(['png', 'jpg', 'jpeg']))
     file: File,
   ) {
     // await this.awsS3.uploadSingleFile(file)
@@ -31,11 +33,11 @@ export class FilesUploadController {
   @Post('/multiple')
   @UseInterceptors(
     FilesInterceptor('files', 3, {
-      limits: { fileSize: 2 * 1024 * 1024 },
+      limits: { fileSize: parseFileSize(MAX_SIZE) },
     }),
   )
   uploadFiles(
-    @UploadedFiles(createParseFilePipe(2 * 1024 * 1024, ['png', 'jpg', 'jpeg']))
+    @UploadedFiles(createParseFilePipe(['png', 'jpg', 'jpeg']))
     files: File[],
   ) {
     // await this.awsS3.uploadMultipleFiles(files)

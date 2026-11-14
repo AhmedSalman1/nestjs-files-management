@@ -17,6 +17,9 @@ importers:
       '@nestjs/platform-express':
         specifier: ^12.0.1
         version: 12.4.2(@nestjs/common@12.4.2(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(@nestjs/core@12.4.2)(rxjs@7.8.2)(supports-color@7.2.0)
+      bytes:
+        specifier: ^3.1.2
+        version: 3.1.2
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -36,6 +39,9 @@ importers:
       '@nestjs/testing':
         specifier: ^12.0.1
         version: 12.4.2(@nestjs/common@12.4.2(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(@nestjs/core@12.4.2)(@nestjs/platform-express@12.4.2)
+      '@types/bytes':
+        specifier: ^3.1.6
+        version: 3.1.6
       '@types/express':
         specifier: ^5.0.0
         version: 5.0.6
@@ -682,6 +688,9 @@ packages:
 
   '@types/body-parser@1.19.6':
     resolution: {integrity: sha512-HLFeCYgz89uk22N5Qg3dvGvsv46B8GLvKKo1zKG4NybA8U2DiEO3w9lqGg29t/tfLRJpJ6iQxnVw4OnB7MoM9g==}
+
+  '@types/bytes@3.1.6':
+    resolution: {integrity: sha512-mZP7MVbCf8q2nBMwll27TyVnObEo9lNuXtQ+XU5EBGiFxtm9qfWm0YL4KTMQBwcVlOZB+th51gFIDYFFBiK7IQ==}
 
   '@types/chai@5.2.3':
     resolution: {integrity: sha512-Mw558oeA9fFbv65/y4mHtXDs9bPnFMZAL/jxdPFUpOHHIXX91mcgEHbS5Lahr+pwZFR8A7GQleRWeI6cGFC2UA==}
@@ -2387,6 +2396,8 @@ snapshots:
     dependencies:
       '@types/connect': 3.4.38
       '@types/node': 24.19.2
+
+  '@types/bytes@3.1.6': {}
 
   '@types/chai@5.2.3':
     dependencies:
