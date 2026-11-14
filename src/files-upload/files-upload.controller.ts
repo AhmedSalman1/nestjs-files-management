@@ -21,7 +21,7 @@ export class FilesUploadController {
     }),
   )
   uploadFile(
-    @UploadedFile(createParseFilePipe(2 * 1024 * 1024, /png|jpg|jpeg/)) // 2MB
+    @UploadedFile(createParseFilePipe(2 * 1024 * 1024, ['png', 'jpg', 'jpeg'])) // 2MB
     file: File,
   ) {
     // await this.awsS3.uploadSingleFile(file)
@@ -35,7 +35,7 @@ export class FilesUploadController {
     }),
   )
   uploadFiles(
-    @UploadedFiles(createParseFilePipe(2 * 1024 * 1024, /png|jpg|jpeg/))
+    @UploadedFiles(createParseFilePipe(2 * 1024 * 1024, ['png', 'jpg', 'jpeg']))
     files: File[],
   ) {
     // await this.awsS3.uploadMultipleFiles(files)

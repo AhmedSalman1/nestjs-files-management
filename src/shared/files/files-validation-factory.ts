@@ -1,29 +1,41 @@
 import {
   FileTypeValidator,
+  FileValidator,
   HttpStatus,
   MaxFileSizeValidator,
   ParseFilePipe,
   UnprocessableEntityException,
 } from '@nestjs/common';
+import { FileType } from './types/file.types.js';
+import { createFileTypeRegex } from './utils/file.util.js';
+
+const createFileValidators = (
+  maxSize: number,
+  fileTypes: FileType[],
+): FileValidator[] => {
+  const fileTypeRegex = createFileTypeRegex(fileTypes);
+
+  return [
+    // 1) validate file size
+    new MaxFileSizeValidator({
+      maxSize,
+      message: (maxSize) =>
+        `File is too big. Max file size is ${maxSize} bytes`,
+    }),
+
+    // 2) validate file type (extension)
+    new FileTypeValidator({ fileType: fileTypeRegex }),
+
+    // 3) custom validation
+  ];
+};
 
 export const createParseFilePipe = (
   maxSize: number,
-  fileType: RegExp | string,
+  fileTypes: FileType[],
 ): ParseFilePipe =>
   new ParseFilePipe({
-    validators: [
-      // 1) validate file size
-      new MaxFileSizeValidator({
-        maxSize,
-        message: (maxSize) =>
-          `File is too big. Max file size is ${maxSize} bytes`,
-      }),
-
-      // 2) validate file type (extension)
-      new FileTypeValidator({ fileType }),
-
-      // 3) custom validation
-    ],
+    validators: createFileValidators(maxSize, fileTypes),
     errorHttpStatusCode: HttpStatus.UNSUPPORTED_MEDIA_TYPE,
     exceptionFactory: (error: string) => {
       console.log('error', error);
